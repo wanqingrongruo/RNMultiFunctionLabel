@@ -1,0 +1,2 @@
+# RNMultiFunctionLabel
+multiFunction label
