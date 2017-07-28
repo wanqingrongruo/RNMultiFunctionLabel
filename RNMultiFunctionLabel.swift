@@ -10,14 +10,45 @@ import UIKit
 
 class RNMultiFunctionLabel: UILabel {
     
-    var isOpenTapGesture: Bool = false // 是否打开点击手势 -- default: false
-    var isOpenLongGesture: Bool = true // 是否打开长按手势 -- default: true
+    var isOpenTapGesture: Bool = false { // 是否打开点击手势 -- default: false
+        didSet{
+            
+            if isOpenTapGesture {
+                
+                self.addTapGesture()
+            }
+        }
+    }
+    var isOpenLongGesture: Bool = true { // 是否打开长按手势 -- default: true
+        didSet {
+             self.addLongPressGesture()
+        }
+    }
     
     //在具体使用中写函数
     var tapClosure: ((_ gesture: UITapGestureRecognizer) -> ())? // 点击事件
     var pressClosure: ((_ gesture: UILongPressGestureRecognizer) -> ())? // 长按事件
     
-    var isOpenHightLightForKeyword: Bool = false // 是否打开关键词高亮显示
+    var isOpenHightLightForKeyword: Bool = false {  // 是否打开关键词高亮显示
+        
+        didSet{
+            
+            guard let k = keyword else {
+                return
+            }
+            
+            guard let t = text else {
+                return
+            }
+            
+            let attr = NSMutableAttributedString(string: t)
+            let str = NSString(string: t)
+            let theRange = str.range(of: k)
+            attr.addAttribute(NSForegroundColorAttributeName, value: UIColor.orange, range: theRange)
+            self.attributedText = attr
+
+        }
+    }
     var keyword: String? = nil // 关键词
     
     override var canBecomeFirstResponder: Bool {
